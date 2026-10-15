@@ -1,0 +1,16 @@
+CREATE TABLE roles (
+    id UUID PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description VARCHAR(255)
+);
+
+CREATE TABLE user_roles (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_id UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, role_id)
+);
+
+INSERT INTO roles (id, name, description) VALUES 
+('11111111-1111-1111-1111-111111111111', 'ADMIN', 'Administrator'),
+('22222222-2222-2222-2222-222222222222', 'INVENTORY_OPERATOR', 'Inventory Manager'),
+('33333333-3333-3333-3333-333333333333', 'VIEWER', 'Read Only Access');
