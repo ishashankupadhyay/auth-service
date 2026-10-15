@@ -27,14 +27,20 @@ public class TokenService {
 
     public String generateAccessToken(SecurityPrincipal principal) {
         Instant now = Instant.now();
-        String scope = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+        String scope = principal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusMillis(expirationMs))
                 .subject(principal.getUser().getId().toString())
+                // ADD THIS LINE: Embed the username securely in the JWT payload
+                .claim("username", principal.getUsername())
                 .claim("scope", scope)
                 .build();
+
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }
